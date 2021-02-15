@@ -43,6 +43,12 @@ public class PlayerController : MonoBehaviour
         // Set Target Position
         m_ballBehaviour.m_vTargetPos = m_TargetPos;
 
+        if(m_Ball.GetComponent<BallBehaviour>().m_Goal)
+        {
+            m_Ball.GetComponent<BallBehaviour>().m_Goal = false;
+            m_UI.AddGoal();
+        }
+
     }
 
     void HandleInput()

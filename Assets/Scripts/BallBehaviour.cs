@@ -6,7 +6,7 @@ using UnityEngine;
 public class BallBehaviour : MonoBehaviour
 {
     [SerializeField]
-    private float m_fPower;
+    private BoxCollider m_GoalArea;
 
     [SerializeField]
     public Vector3 m_vTargetPos;
@@ -27,11 +27,11 @@ public class BallBehaviour : MonoBehaviour
 
     private bool m_bIsGrounded = true;
 
-    private float m_fDistanceToTarget = 0f;
-
     private Vector3 vDebugHeading;
 
     private Vector3 m_VStartPos = new Vector3(0.0f, 0.5f, -20.0f);
+
+    public bool m_Goal = false;
 
     // Start is called before the first frame update
     void Start()
@@ -39,8 +39,9 @@ public class BallBehaviour : MonoBehaviour
         m_rb = GetComponent<Rigidbody>();
         Assert.IsNotNull(m_rb, "Problem: RigidBody not attached");
 
+        Assert.IsNotNull(m_GoalArea, "Problem: Goal Area not attached");
+
         CreateTargetDisplay();
-        m_fDistanceToTarget = (m_targetDisplay.transform.position - transform.position).magnitude;
 
         // Move Target Position to Starting Position
         m_vTargetPos = new Vector3(0.0f, 3.0f, 0.0f);
@@ -54,8 +55,6 @@ public class BallBehaviour : MonoBehaviour
     {
         if (m_targetDisplay != null && m_bIsGrounded)
         {
-            m_fDistanceToTarget = (m_targetDisplay.transform.position - transform.position).magnitude;
-
             m_targetDisplay.transform.position = m_vTargetPos;
             vDebugHeading = m_vTargetPos - transform.position;
         }
@@ -141,6 +140,7 @@ public class BallBehaviour : MonoBehaviour
     {
         if (!m_bIsGrounded)
         {
+            m_Goal = false;
             m_bIsGrounded = true;
             m_rb.isKinematic = true;
 
@@ -157,5 +157,13 @@ public class BallBehaviour : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawLine(transform.position + vDebugHeading, transform.position);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other == m_GoalArea.GetComponent<Collider>())
+        {
+            m_Goal = true;
+        }
     }
 }

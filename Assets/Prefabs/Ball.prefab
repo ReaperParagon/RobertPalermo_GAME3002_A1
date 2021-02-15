@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4417222095764276263}
   - component: {fileID: 4417222095764276259}
   - component: {fileID: 4417222095764276256}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Ball
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -109,11 +109,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94ab90f827ac8a841a57592495afd1f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_GoalArea: {fileID: 0}
   m_fPower: 0
   m_vTargetPos: {x: 114.19883, y: 34.30005, z: 0}
   m_vInitialVel: {x: 0, y: 0, z: 0}
   m_bDebugKickBall: 0
   m_bDebugReset: 0
+  m_fSpeed: 0
 --- !u!54 &4417222095764276256
 Rigidbody:
   m_ObjectHideFlags: 0
