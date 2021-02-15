@@ -29,7 +29,7 @@ public class BallBehaviour : MonoBehaviour
 
     private Vector3 vDebugHeading;
 
-    private Vector3 m_VStartPos = new Vector3(0.0f, 1.0f, -10.0f);
+    private Vector3 m_VStartPos = new Vector3(0.0f, 0.5f, -10.0f);
 
     // Start is called before the first frame update
     void Start()
@@ -94,25 +94,34 @@ public class BallBehaviour : MonoBehaviour
 
         Vector3 Displacement = m_targetDisplay.transform.position - transform.position;
 
-        // Angle Of Vertical
-        // float fTheta = Mathf.Atan((4 * fMaxHeight) / (fRange));
-        float fTheta = Mathf.Atan(Displacement.y / Displacement.z);
+        
 
         // Angle of Horizontal
-        // float fPhi = Mathf.Atan(2 * fXDisplacement / fRange);
         float fPhi = Mathf.Atan(Displacement.x / Displacement.z);
 
-        // float fInitVelMag = Mathf.Sqrt((2 * Mathf.Abs(Physics.gravity.y) * fMaxHeight)) / Mathf.Sin(m_fVertAngle);
+        if (Displacement.x == 0.0f)
+        {
+            Displacement.x = Mathf.Epsilon;
+            fPhi = Mathf.Epsilon;
+        }
+
+        // Angle Of Vertical
+        float fTheta = Mathf.Atan(Displacement.y / (Displacement.z / Mathf.Cos(fPhi)));
+
+        float MaxHeight = Displacement.y;
+        // float Range = (Displacement.x / Mathf.Sin(fPhi)) * 2;
+
+        float Velocity = Mathf.Sqrt((2 * Mathf.Abs(Physics.gravity.y) * MaxHeight)) / Mathf.Sin(fTheta);
 
         float VerticalVelocity = Mathf.Sin(fTheta);
-        float HorizontalVelocity = Mathf.Cos(fTheta) * Mathf.Cos(fPhi);
-        float SideVelocity = Mathf.Sin(fPhi) * Mathf.Cos(fTheta);
+        float HorizontalVelocity = Mathf.Cos(fTheta) * Mathf.Cos(fPhi) * 0.5f;
+        float SideVelocity = Mathf.Cos(fTheta) * Mathf.Sin(fPhi) * 0.5f;
 
         m_vInitialVel.x = SideVelocity;
         m_vInitialVel.y = VerticalVelocity;
         m_vInitialVel.z = HorizontalVelocity;
 
-        m_rb.velocity = m_fPower * m_vInitialVel;
+        m_rb.velocity = Velocity * m_vInitialVel;
 
         // Remove Target
         // m_targetDisplay.SetActive(false);
