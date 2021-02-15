@@ -125,6 +125,10 @@ public class BallBehaviour : MonoBehaviour
 
         // Remove Target
         // m_targetDisplay.SetActive(false);
+
+        // Add rotation to ball
+        Vector3 Torque = new Vector3(0.0f, 100.0f, 300.0f);
+        m_rb.AddTorque(Torque, ForceMode.Impulse);
     }
 
     public void ResetBall()
@@ -136,6 +140,7 @@ public class BallBehaviour : MonoBehaviour
         transform.position = m_VStartPos;
 
         m_targetDisplay.transform.position = new Vector3(0.0f, 3.0f, 0.0f);
+        transform.rotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
         m_targetDisplay.SetActive(true);
     }
 
