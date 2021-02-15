@@ -29,7 +29,7 @@ public class BallBehaviour : MonoBehaviour
 
     private Vector3 vDebugHeading;
 
-    private Vector3 m_VStartPos = new Vector3(0.0f, 0.5f, -10.0f);
+    private Vector3 m_VStartPos = new Vector3(0.0f, 0.5f, -20.0f);
 
     // Start is called before the first frame update
     void Start()
