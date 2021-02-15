@@ -9,7 +9,7 @@ public class BallBehaviour : MonoBehaviour
     private float m_fPower;
 
     [SerializeField]
-    private Vector3 m_vTargetPos;
+    public Vector3 m_vTargetPos;
 
     [SerializeField]
     private Vector3 m_vInitialVel;
@@ -84,64 +84,71 @@ public class BallBehaviour : MonoBehaviour
 
     public void OnKickBall()
     {
-        // Allow Movement
-        m_rb.isKinematic = false;
-
-        // Disable Grounded
-        m_bIsGrounded = false;
-
-        // Uses Formulas from slides
-
-        Vector3 Displacement = m_targetDisplay.transform.position - transform.position;
-
-        
-
-        // Angle of Horizontal
-        float fPhi = Mathf.Atan(Displacement.x / Displacement.z);
-
-        if (Displacement.x == 0.0f)
+        if (m_bIsGrounded)
         {
-            Displacement.x = Mathf.Epsilon;
-            fPhi = Mathf.Epsilon;
+
+            // Allow Movement
+            m_rb.isKinematic = false;
+
+            // Disable Grounded
+            m_bIsGrounded = false;
+
+            // Uses Formulas from slides
+
+            Vector3 Displacement = m_targetDisplay.transform.position - transform.position;
+
+
+
+            // Angle of Horizontal
+            float fPhi = Mathf.Atan(Displacement.x / Displacement.z);
+
+            if (Displacement.x == 0.0f)
+            {
+                Displacement.x = Mathf.Epsilon;
+                fPhi = Mathf.Epsilon;
+            }
+
+            // Angle Of Vertical
+            float fTheta = Mathf.Atan(Displacement.y / (Displacement.z / Mathf.Cos(fPhi)));
+
+            float MaxHeight = Displacement.y;
+            // float Range = (Displacement.x / Mathf.Sin(fPhi)) * 2;
+
+            float Velocity = Mathf.Sqrt((2 * Mathf.Abs(Physics.gravity.y) * MaxHeight)) / Mathf.Sin(fTheta);
+
+            float VerticalVelocity = Mathf.Sin(fTheta);
+            float HorizontalVelocity = Mathf.Cos(fTheta) * Mathf.Cos(fPhi) * 0.5f;
+            float SideVelocity = Mathf.Cos(fTheta) * Mathf.Sin(fPhi) * 0.5f;
+
+            m_vInitialVel.x = SideVelocity;
+            m_vInitialVel.y = VerticalVelocity;
+            m_vInitialVel.z = HorizontalVelocity;
+
+            m_rb.velocity = Velocity * m_vInitialVel;
+
+            // Remove Target
+            m_targetDisplay.SetActive(false);
+
+            // Add rotation to ball
+            Vector3 Torque = new Vector3(0.0f, 100.0f, 300.0f);
+            m_rb.AddTorque(Torque, ForceMode.Impulse);
         }
-
-        // Angle Of Vertical
-        float fTheta = Mathf.Atan(Displacement.y / (Displacement.z / Mathf.Cos(fPhi)));
-
-        float MaxHeight = Displacement.y;
-        // float Range = (Displacement.x / Mathf.Sin(fPhi)) * 2;
-
-        float Velocity = Mathf.Sqrt((2 * Mathf.Abs(Physics.gravity.y) * MaxHeight)) / Mathf.Sin(fTheta);
-
-        float VerticalVelocity = Mathf.Sin(fTheta);
-        float HorizontalVelocity = Mathf.Cos(fTheta) * Mathf.Cos(fPhi) * 0.5f;
-        float SideVelocity = Mathf.Cos(fTheta) * Mathf.Sin(fPhi) * 0.5f;
-
-        m_vInitialVel.x = SideVelocity;
-        m_vInitialVel.y = VerticalVelocity;
-        m_vInitialVel.z = HorizontalVelocity;
-
-        m_rb.velocity = Velocity * m_vInitialVel;
-
-        // Remove Target
-        // m_targetDisplay.SetActive(false);
-
-        // Add rotation to ball
-        Vector3 Torque = new Vector3(0.0f, 100.0f, 300.0f);
-        m_rb.AddTorque(Torque, ForceMode.Impulse);
     }
 
     public void ResetBall()
     {
-        m_bIsGrounded = true;
-        m_rb.isKinematic = true;
+        if (!m_bIsGrounded)
+        {
+            m_bIsGrounded = true;
+            m_rb.isKinematic = true;
 
-        m_rb.velocity = Vector3.zero;
-        transform.position = m_VStartPos;
+            m_rb.velocity = Vector3.zero;
+            transform.position = m_VStartPos;
 
-        m_targetDisplay.transform.position = new Vector3(0.0f, 3.0f, 0.0f);
-        transform.rotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
-        m_targetDisplay.SetActive(true);
+            m_targetDisplay.transform.position = m_vTargetPos;
+            transform.rotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
+            m_targetDisplay.SetActive(true);
+        }
     }
 
     private void OnDrawGizmos()
