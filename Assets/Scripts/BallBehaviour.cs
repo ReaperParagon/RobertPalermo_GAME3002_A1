@@ -6,6 +6,9 @@ using UnityEngine;
 public class BallBehaviour : MonoBehaviour
 {
     [SerializeField]
+    private float m_fPower;
+
+    [SerializeField]
     private Vector3 m_vTargetPos;
 
     [SerializeField]
@@ -49,6 +52,8 @@ public class BallBehaviour : MonoBehaviour
     {
         if (m_targetDisplay != null && m_bIsGrounded)
         {
+            m_fDistanceToTarget = (m_targetDisplay.transform.position - transform.position).magnitude;
+
             m_targetDisplay.transform.position = m_vTargetPos;
             vDebugHeading = m_vTargetPos - transform.position;
         }
@@ -87,25 +92,30 @@ public class BallBehaviour : MonoBehaviour
 
         // Uses Formulas from slides
 
-        float fMaxHeight = m_targetDisplay.transform.position.y;
-        float fRange = m_fDistanceToTarget * 2;
-        float fXDisplacement = m_targetDisplay.transform.position.x - transform.position.x;
+        Vector3 Displacement = m_targetDisplay.transform.position - transform.position;
 
         // Angle Of Vertical
-        float fTheta = Mathf.Atan((4 * fMaxHeight) / (fRange));
+        // float fTheta = Mathf.Atan((4 * fMaxHeight) / (fRange));
+        float fTheta = Mathf.Atan(Displacement.y / Displacement.z);
 
-        float fPhi = Mathf.Atan(fXDisplacement / fRange);
+        // Angle of Horizontal
+        // float fPhi = Mathf.Atan(2 * fXDisplacement / fRange);
+        float fPhi = Mathf.Atan(Displacement.x / Displacement.z);
 
-        float fInitVelMag = Mathf.Sqrt((2 * Mathf.Abs(Physics.gravity.y) * fMaxHeight)) / Mathf.Sin(fTheta);
+        // float fInitVelMag = Mathf.Sqrt((2 * Mathf.Abs(Physics.gravity.y) * fMaxHeight)) / Mathf.Sin(m_fVertAngle);
 
-        m_vInitialVel.y = fInitVelMag * Mathf.Sin(fTheta);
-        m_vInitialVel.z = fInitVelMag * Mathf.Cos(fTheta);
-        m_vInitialVel.x = fInitVelMag * Mathf.Sin(fPhi);
+        float VerticalVelocity = Mathf.Sin(fTheta);
+        float HorizontalVelocity = Mathf.Cos(fTheta) * Mathf.Cos(fPhi);
+        float SideVelocity = Mathf.Sin(fPhi) * Mathf.Cos(fTheta);
 
-        m_rb.velocity = m_vInitialVel;
+        m_vInitialVel.x = SideVelocity;
+        m_vInitialVel.y = VerticalVelocity;
+        m_vInitialVel.z = HorizontalVelocity;
+
+        m_rb.velocity = m_fPower * m_vInitialVel;
 
         // Remove Target
-        m_targetDisplay.SetActive(false);
+        // m_targetDisplay.SetActive(false);
     }
 
     public void ResetBall()
