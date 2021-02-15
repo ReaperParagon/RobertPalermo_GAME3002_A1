@@ -23,6 +23,8 @@ public class BallBehaviour : MonoBehaviour
     private Rigidbody m_rb = null;
     private GameObject m_targetDisplay = null;
 
+    public float m_fSpeed;
+
     private bool m_bIsGrounded = true;
 
     private float m_fDistanceToTarget = 0f;
@@ -114,7 +116,7 @@ public class BallBehaviour : MonoBehaviour
             float MaxHeight = Displacement.y;
             // float Range = (Displacement.x / Mathf.Sin(fPhi)) * 2;
 
-            float Velocity = Mathf.Sqrt((2 * Mathf.Abs(Physics.gravity.y) * MaxHeight)) / Mathf.Sin(fTheta);
+            m_fSpeed = Mathf.Sqrt((2 * Mathf.Abs(Physics.gravity.y) * MaxHeight)) / Mathf.Sin(fTheta);
 
             float VerticalVelocity = Mathf.Sin(fTheta);
             float HorizontalVelocity = Mathf.Cos(fTheta) * Mathf.Cos(fPhi) * 0.5f;
@@ -124,7 +126,7 @@ public class BallBehaviour : MonoBehaviour
             m_vInitialVel.y = VerticalVelocity;
             m_vInitialVel.z = HorizontalVelocity;
 
-            m_rb.velocity = Velocity * m_vInitialVel;
+            m_rb.velocity = m_fSpeed * m_vInitialVel;
 
             // Remove Target
             m_targetDisplay.SetActive(false);

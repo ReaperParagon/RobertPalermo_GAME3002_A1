@@ -9,6 +9,9 @@ public class PlayerController : MonoBehaviour
     private GameObject m_Ball;
 
     [SerializeField]
+    private UIController m_UI;
+
+    [SerializeField]
     private Transform m_StartPos;
 
     private BallBehaviour m_ballBehaviour;
@@ -19,6 +22,8 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         Assert.IsNotNull(m_Ball, "Problem: Ball is not specified");
+
+        Assert.IsNotNull(m_UI, "Problem: UI Controller is not specified");
 
         m_ballBehaviour = m_Ball.GetComponent<BallBehaviour>();
         Assert.IsNotNull(m_ballBehaviour, "Problem: Ball does not have BallBehaviour attached");
@@ -81,10 +86,12 @@ public class PlayerController : MonoBehaviour
     public void TryKickBall()
     {
         m_Ball.GetComponent<BallBehaviour>().OnKickBall();
+        m_UI.SetSpeed((int)m_Ball.GetComponent<BallBehaviour>().m_fSpeed);
     }
 
     public void TryResetBall()
     {
         m_Ball.GetComponent<BallBehaviour>().ResetBall();
+        m_UI.ResetUI();
     }
 }
