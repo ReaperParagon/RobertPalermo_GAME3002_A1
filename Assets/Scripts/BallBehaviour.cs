@@ -28,7 +28,7 @@ public class BallBehaviour : MonoBehaviour
 
     public float m_fSpeed;
 
-    private bool m_bIsGrounded = true;
+    public bool m_bIsGrounded = true;
 
     private Vector3 vDebugHeading;
 

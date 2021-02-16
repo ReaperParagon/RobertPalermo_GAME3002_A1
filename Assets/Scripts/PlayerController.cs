@@ -17,6 +17,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private Transform m_StartPos;
 
+    [SerializeField]
+    private GoalieBehaviour m_Goalie;
+
     private BallBehaviour m_ballBehaviour;
 
     private Vector3 m_TargetPos;
@@ -27,6 +30,8 @@ public class PlayerController : MonoBehaviour
         Assert.IsNotNull(m_Ball, "Problem: Ball is not specified");
 
         Assert.IsNotNull(m_UI, "Problem: UI Controller is not specified");
+
+        Assert.IsNotNull(m_Goalie, "Problem: Goalie is not specified");
 
         m_ballBehaviour = m_Ball.GetComponent<BallBehaviour>();
         Assert.IsNotNull(m_ballBehaviour, "Problem: Ball does not have BallBehaviour attached");
@@ -94,15 +99,17 @@ public class PlayerController : MonoBehaviour
 
     public void TryKickBall()
     {
+        if (m_ballBehaviour.m_bIsGrounded)
+            m_Audio.PlayWhistle();
+
         m_Ball.GetComponent<BallBehaviour>().OnKickBall();
         m_UI.SetSpeed(m_Ball.GetComponent<BallBehaviour>().m_fSpeed);
-
-        m_Audio.PlayWhistle();
     }
 
     public void TryResetBall()
     {
         m_Ball.GetComponent<BallBehaviour>().ResetBall();
         m_UI.ResetUI();
+        m_Goalie.ResetPosition();
     }
 }
