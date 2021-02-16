@@ -31,19 +31,23 @@ public class GoalieBehaviour : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Chase Ball Horizontally
         if(!m_Ball.m_bIsGrounded && m_fCurrentTime < m_fTime)
         {
             Vector3 endPos = new Vector3(m_Ball.m_vTargetPos.x, 1.5f, 0.0f);
             endPos.x = Mathf.Clamp(endPos.x, -8.9f, 8.9f);
+
+            // Linear Interpolation
             transform.position = new Vector3(Mathf.SmoothStep(m_VStartPos.x, endPos.x, m_fCurrentTime / m_fTime), transform.position.y, transform.position.z);
 
             m_fCurrentTime += Time.deltaTime;
         }
 
+        // Try to jump for the ball
         if(!m_Ball.m_bIsGrounded && !m_bJumped && m_fCurrentTime >= m_fTime)
         {
             m_bJumped = true;
-            float JumpPower = 7.0f;
+            float JumpPower = m_Ball.m_vTargetPos.y * 1.0f;
             m_rb.velocity = new Vector3(0.0f, JumpPower, 0.0f);
         }
     }

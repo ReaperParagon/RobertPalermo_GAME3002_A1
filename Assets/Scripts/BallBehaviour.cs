@@ -92,50 +92,44 @@ public class BallBehaviour : MonoBehaviour
     {
         if (m_bIsGrounded)
         {
-
             // Allow Movement
             m_rb.isKinematic = false;
 
             // Disable Grounded
             m_bIsGrounded = false;
 
-            // Uses Formulas from slides
-
+            // Displacement represents target's position relative to the Ball's starting position
             Vector3 Displacement = m_targetDisplay.transform.position - transform.position;
 
-
-
-            // Angle of Horizontal
+            // Angle Left or Right of Straight Forward
             float fPhi = Mathf.Atan(Displacement.x / Displacement.z);
 
-            if (Displacement.x == 0.0f)
-            {
-                Displacement.x = Mathf.Epsilon;
-                fPhi = Mathf.Epsilon;
-            }
-
-            // Angle Of Vertical
+            // Angle Of Incline from the Ball to the target
             float fTheta = Mathf.Atan(Displacement.y / (Displacement.z / Mathf.Cos(fPhi)));
 
+            // The Max Height the Projectile will reach is determined by the target's position
             float MaxHeight = Displacement.y;
-            // float Range = (Displacement.x / Mathf.Sin(fPhi)) * 2;
 
+            // Magnitude of the Velocity, Formula taken from the slides (For Calculating Max Height, rearranged for Velocity)
             m_fSpeed = Mathf.Sqrt((2 * Mathf.Abs(Physics.gravity.y) * MaxHeight)) / Mathf.Sin(fTheta);
 
+            // Calculating The Proper Direction Vector for the projectile in 3D space
+            // Similar to the vertical and horizontal component calculations for 2D
             float VerticalVelocity = Mathf.Sin(fTheta);
             float HorizontalVelocity = Mathf.Cos(fTheta) * Mathf.Cos(fPhi) * 0.5f;
-            float SideVelocity = Mathf.Cos(fTheta) * Mathf.Sin(fPhi) * 0.5f;
+            float LeftRightVelocity = Mathf.Cos(fTheta) * Mathf.Sin(fPhi) * 0.5f;
 
-            m_vInitialVel.x = SideVelocity;
+            m_vInitialVel.x = LeftRightVelocity;
             m_vInitialVel.y = VerticalVelocity;
             m_vInitialVel.z = HorizontalVelocity;
 
+            // Multiply the Direction by the Speed, set as the Rigid Body's Velocity
             m_rb.velocity = m_fSpeed * m_vInitialVel;
 
             // Remove Target
             m_targetDisplay.SetActive(false);
 
-            // Add rotation to ball
+            // Add rotation to ball, to make it look more realistic
             Vector3 Torque = new Vector3(0.0f, 100.0f, 300.0f);
             m_rb.AddTorque(Torque, ForceMode.Impulse);
         }
@@ -166,6 +160,7 @@ public class BallBehaviour : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        // Checking Collision with the Goal
         if(other == m_GoalArea.GetComponent<Collider>())
         {
             m_Goal = true;
