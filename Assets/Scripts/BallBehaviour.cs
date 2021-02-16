@@ -20,6 +20,9 @@ public class BallBehaviour : MonoBehaviour
     [SerializeField]
     private bool m_bDebugReset = false;
 
+    [SerializeField]
+    private AudioManager m_Audio;
+
     private Rigidbody m_rb = null;
     private GameObject m_targetDisplay = null;
 
@@ -40,6 +43,8 @@ public class BallBehaviour : MonoBehaviour
         Assert.IsNotNull(m_rb, "Problem: RigidBody not attached");
 
         Assert.IsNotNull(m_GoalArea, "Problem: Goal Area not attached");
+
+        Assert.IsNotNull(m_Audio, "Problem: Audio Manager not attached");
 
         CreateTargetDisplay();
 
@@ -164,6 +169,8 @@ public class BallBehaviour : MonoBehaviour
         if(other == m_GoalArea.GetComponent<Collider>())
         {
             m_Goal = true;
+
+            m_Audio.PlayGoal();
         }
     }
 }

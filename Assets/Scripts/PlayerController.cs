@@ -12,6 +12,9 @@ public class PlayerController : MonoBehaviour
     private UIController m_UI;
 
     [SerializeField]
+    private AudioManager m_Audio;
+
+    [SerializeField]
     private Transform m_StartPos;
 
     private BallBehaviour m_ballBehaviour;
@@ -93,6 +96,8 @@ public class PlayerController : MonoBehaviour
     {
         m_Ball.GetComponent<BallBehaviour>().OnKickBall();
         m_UI.SetSpeed(m_Ball.GetComponent<BallBehaviour>().m_fSpeed);
+
+        m_Audio.PlayWhistle();
     }
 
     public void TryResetBall()
