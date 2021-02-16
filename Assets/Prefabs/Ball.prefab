@@ -110,12 +110,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_GoalArea: {fileID: 0}
-  m_fPower: 0
-  m_vTargetPos: {x: 114.19883, y: 34.30005, z: 0}
+  m_vTargetPos: {x: 0, y: 5, z: 0}
   m_vInitialVel: {x: 0, y: 0, z: 0}
   m_bDebugKickBall: 0
   m_bDebugReset: 0
+  m_Audio: {fileID: 0}
   m_fSpeed: 0
+  m_bIsGrounded: 1
+  m_Goal: 0
 --- !u!54 &4417222095764276256
 Rigidbody:
   m_ObjectHideFlags: 0
