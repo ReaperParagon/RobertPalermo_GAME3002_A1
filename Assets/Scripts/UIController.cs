@@ -20,9 +20,12 @@ public class UIController : MonoBehaviour
     [SerializeField]
     private Text m_TPopup;
 
+    [SerializeField]
+    private GameObject m_Instructions;
+
     private int m_iGoals = 0;
 
-    private int m_iSpeed = 0;
+    private float m_fSpeed = 0;
 
     private void Start()
     {
@@ -57,9 +60,10 @@ public class UIController : MonoBehaviour
         m_TPopup.gameObject.SetActive(true);
     }
 
-    public void SetSpeed(int speed)
+    public void SetSpeed(float speed)
     {
-        m_iSpeed = speed;
+        // Scale down the speed to be more realistic (Converting from Units to meters, and then m/s to km/h)
+        m_fSpeed = speed * 0.33f * 3.6f;
         UpdateSpeedText();
     }
 
@@ -70,6 +74,12 @@ public class UIController : MonoBehaviour
 
     private void UpdateSpeedText()
     {
-        m_TSpeed.text = "Velocity: " + m_iSpeed.ToString();
+        string speed = m_fSpeed.ToString("0.0");
+        m_TSpeed.text = "Velocity: " + speed + " km/h";
+    }
+
+    public void HideInstructions()
+    {
+        m_Instructions.SetActive(false);
     }
 }

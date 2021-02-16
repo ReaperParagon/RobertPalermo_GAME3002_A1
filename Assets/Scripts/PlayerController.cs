@@ -38,7 +38,7 @@ public class PlayerController : MonoBehaviour
 
         // Lock Target Position Within Area
         m_TargetPos.x = Mathf.Clamp(m_TargetPos.x, -11.0f, 11.0f);
-        m_TargetPos.y = Mathf.Clamp(m_TargetPos.y, 0.8f, 9.0f);
+        m_TargetPos.y = Mathf.Clamp(m_TargetPos.y, 1.0f, 9.0f);
 
         // Set Target Position
         m_ballBehaviour.m_vTargetPos = m_TargetPos;
@@ -92,7 +92,7 @@ public class PlayerController : MonoBehaviour
     public void TryKickBall()
     {
         m_Ball.GetComponent<BallBehaviour>().OnKickBall();
-        m_UI.SetSpeed((int)m_Ball.GetComponent<BallBehaviour>().m_fSpeed);
+        m_UI.SetSpeed(m_Ball.GetComponent<BallBehaviour>().m_fSpeed);
     }
 
     public void TryResetBall()
